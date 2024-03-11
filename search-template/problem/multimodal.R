@@ -6,17 +6,24 @@
 
 # This function must return a list with the information needed to solve the problem.
 # (Depending on the problem, it should receive or not parameters)
-initialize.problem <- function() {
+initialize.problem <- function(file) {
   problem <- list() # Default value is an empty list.
   
   # This attributes are compulsory
-  # problem$name              <- <INSERT CODE HERE>
-  # problem$state_initial     <- <INSERT CODE HERE>
-  # problem$state_final       <- <INSERT CODE HERE>
+   problem$name              <- "Multimodal"
+   start                     <- read.csv(file, header = FALSE, sep = ";", skip = 1, nrows = 1)
+   problem$state_initial     <- list(posicion = start,
+                                     tiempo = 0, 
+                                     ticket = c(0, 0, 0), 
+                                     transporte = 0)
+   problem$state_final       <- NULL
+   problem$size              <- read.csv(file, header = FALSE, sep = ";", nrows = 1)
+   problem$start             <- read.csv(file, header = FALSE, sep = ";", skip = 1, nrows = 1)
+   problem
   # problem$actions_possible  <- <INSERT CODE HERE>
   
   # You can add additional attributes
-  # problem$<aditional_attribute>  <- <INSERT CODE HERE>
+   problem$tiempo  <- 0
   
   return(problem)
 }
@@ -66,3 +73,5 @@ get.evaluation <- function(state, problem) {
   
 	return(1) # Default value is 1.
 }
+file <- "../data/multimodal-planner/map0.txt"
+initialize.problem(file)
