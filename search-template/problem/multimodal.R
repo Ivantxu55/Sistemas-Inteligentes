@@ -73,5 +73,7 @@ get.evaluation <- function(state, problem) {
   
 	return(1) # Default value is 1.
 }
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 file <- "../data/multimodal-planner/map0.txt"
+print(read.csv(file, header = FALSE, sep = ";", nrows = 1))
 initialize.problem(file)
