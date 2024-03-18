@@ -73,7 +73,28 @@ get.evaluation <- function(state, problem) {
   
 	return(1) # Default value is 1.
 }
+
+
+rm(list = ls()) # Clear Environment
+cat("\014")     # Clear Console
+graphics.off()
+library(stringr)
+
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 file <- "../data/multimodal-planner/map0.txt"
+
+problem <- list()
+
+start <- read.csv(file, header = FALSE, sep = ";", skip = 1, nrows = 1)
+
+start <- as.numeric(str_split_fixed(start, ",", 2))
+problem$start <- start
+
+
+final <- read.csv(file, header = FALSE, sep = ";", skip = 2, nrows = 1)
+
+final <- as.numeric(str_split_fixed(final, ",", 2))
+problem$final <- final
+
 print(read.csv(file, header = FALSE, sep = ";", nrows = 1))
 initialize.problem(file)
