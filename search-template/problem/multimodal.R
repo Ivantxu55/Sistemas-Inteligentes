@@ -4,29 +4,62 @@
 # search algorithms. If you modify any headers the algorithms may not work.
 # =========================================================================
 
+rm(list = ls()) # Clear Environment
+cat("\014")     # Clear Console
+graphics.off()
+library(stringr)
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+file <- "../data/multimodal-planner/map0.txt"
+
 # This function must return a list with the information needed to solve the problem.
 # (Depending on the problem, it should receive or not parameters)
-initialize.problem <- function(file) {
+#initialize.problem <- function(file) {
   problem <- list() # Default value is an empty list.
   
   # This attributes are compulsory
    problem$name              <- "Multimodal"
-   start                     <- read.csv(file, header = FALSE, sep = ";", skip = 1, nrows = 1)
+   start <- read.csv(file, header = FALSE, sep = ";", skip = 1, nrows = 1)
+   start <- as.numeric(str_split_fixed(start, ",", 2))
+                       
    problem$state_initial     <- list(posicion = start,
                                      tiempo = 0, 
                                      ticket = c(0, 0, 0), 
                                      transporte = 0)
-   problem$state_final       <- NULL
-   problem$size              <- read.csv(file, header = FALSE, sep = ";", nrows = 1)
-   problem$start             <- read.csv(file, header = FALSE, sep = ";", skip = 1, nrows = 1)
-   problem
+   final <- read.csv(file, header = FALSE, sep = ";", skip = 2, nrows = 1)
+   final <- as.numeric(str_split_fixed(final, ",", 2))
+   
+   problem$state_final       <- list(posicion = final,
+                                     tiempo = 0, 
+                                     ticket = c(0, 0, 0), 
+                                     transporte = 0)
+   
+   size  <- read.csv(file, header = FALSE, sep = ";", nrows = 1)
+   size  <- as.numeric(str_split_fixed(size, ",", 2))
+   problem$size             <- size 
+   problem$walk            <- list(nombre = "",
+                                  tiempo = 0,
+                                  coste = 0 )
+   n <- read.csv(file, header = FALSE, sep = ";", skip = 3, nrows = 1)
+   
+   t <- as.numeric(str_split_fixed(n[1], ":", 2))
+   problem$walk <- list(nombre = "W",
+                        tiempo = t[2],
+                        coste = as.numeric(n[2]))
+   n <- read.csv(file, header = FALSE, sep = ";", skip = 4, nrows = 1)
+   
+   t <- as.numeric(str_split_fixed(n[1], ":", 2))
+   problem$exchange <- list(nombre = "E",
+                            tiempo = t[2],
+                            coste = as.numeric(n[2]))
+   #read.csv(file, header = FALSE, sep = ";", skip = 3, nrows = 1)
   # problem$actions_possible  <- <INSERT CODE HERE>
-  
+  problem$map <- matrix(size[1], size[2])
   # You can add additional attributes
    problem$tiempo  <- 0
   
   return(problem)
-}
+#}
 
 # Analyzes if an action can be applied in the received state.
 is.applicable <- function (state, action, problem) {
@@ -75,25 +108,13 @@ get.evaluation <- function(state, problem) {
 }
 
 
-rm(list = ls()) # Clear Environment
-cat("\014")     # Clear Console
-graphics.off()
-library(stringr)
-
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-file <- "../data/multimodal-planner/map0.txt"
 
 problem <- list()
 
-start <- read.csv(file, header = FALSE, sep = ";", skip = 1, nrows = 1)
-
-start <- as.numeric(str_split_fixed(start, ",", 2))
 problem$start <- start
 
 
-final <- read.csv(file, header = FALSE, sep = ";", skip = 2, nrows = 1)
 
-final <- as.numeric(str_split_fixed(final, ",", 2))
 problem$final <- final
 
 print(read.csv(file, header = FALSE, sep = ";", nrows = 1))
