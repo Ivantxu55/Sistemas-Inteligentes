@@ -43,26 +43,48 @@ file <- "../data/multimodal-planner/map0.txt"
    n <- read.csv(file, header = FALSE, sep = ";", skip = 3, nrows = 1)
    
    t <- as.numeric(str_split_fixed(n[1], ":", 2))
-   problem$walk <- list(nombre = "W",
+   problem$walk <- list(nombre = "Walk",
                         tiempo = t[2],
                         coste = as.numeric(n[2]))
    n <- read.csv(file, header = FALSE, sep = ";", skip = 4, nrows = 1)
    
    t <- as.numeric(str_split_fixed(n[1], ":", 2))
-   problem$exchange <- list(nombre = "E",
+   problem$exchange <- list(nombre = "Ex",
                             tiempo = t[2],
                             coste = as.numeric(n[2]))
+   n <- read.csv(file, header = FALSE,)
+   num <- nrow(n)
+   if(num > 5){
+     n <- read.csv(file, header = FALSE, sep = ";", skip = 5, nrows = 1)
+     t <- as.numeric(str_split_fixed(n[1], ":", 2))
+     problem$metro <- list(nombre = "M",
+                           tiempo = t[2],
+                           coste = as.numeric(n[2]),
+                           posiciones = NULL) #Hacemos un vector de vectores para las posiciones de las paradas de metro
+   #Falta hacer los splits del n para sacar las posiciones de las paradas de metro
+     }
+     problem$bus <- NULL
    #read.csv(file, header = FALSE, sep = ";", skip = 3, nrows = 1)
   # problem$actions_possible  <- <INSERT CODE HERE>
   problem$map <- matrix(size[1], size[2])
   # You can add additional attributes
    problem$tiempo  <- 0
+    problem$posible_actions <- data.frame(dierction = c("N", "S", "E", "W", "NE", "NW", "SE", "SW",
+                                                        "Walk", "B", "Train", "Metro"))
+   
   
-  return(problem)
+  #return(problem)
 #}
 
 # Analyzes if an action can be applied in the received state.
 is.applicable <- function (state, action, problem) {
+  if(action == "Walk")
+    return(TRUE)
+  if(action == "Bus" && !state$transporte == 1 && state$po)
+    return(TRUE)
+  
+  
+  
   result <- FALSE # Default value is FALSE.
   
   # <INSERT CODE HERE TO CHECK THE APPLICABILITY OF EACH ACTION>
