@@ -35,7 +35,7 @@ obtener_datos_transporte <- function(skip) {
 }
 # This function must return a list with the information needed to solve the problem.
 # (Depending on the problem, it should receive or not parameters)
-#initialize.problem <- function(file) {
+initialize.problem <- function(file) {
   problem <- list() # Default value is an empty list.
   
   # This attributes are compulsory
@@ -76,7 +76,7 @@ obtener_datos_transporte <- function(skip) {
     i <- 5
     transportes <- c()
     a <- 7
-    for(i in 5:num){
+    for(i in 5:num - 1){
       problem[[a]] <- obtener_datos_transporte(i)
       
       a <- a+1
@@ -90,8 +90,8 @@ obtener_datos_transporte <- function(skip) {
                                                         "Walk", "Metro", "Bus", "Tren"))
    
   
-  #return(problem)
-#}
+  return(problem)
+}
 
 
 # Analyzes if an action can be applied in the received state.
@@ -296,3 +296,4 @@ get.evaluation <- function(state, problem) {
   
 	return(state&tiempo) # Default value is 1.
 }
+
