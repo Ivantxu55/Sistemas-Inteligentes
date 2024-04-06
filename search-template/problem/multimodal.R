@@ -55,27 +55,27 @@ obtener_datos_transporte <- function(skip) {
    size  <- read.csv(file, header = FALSE, sep = ";", nrows = 1)
    size  <- as.numeric(str_split_fixed(size, ",", 2))
    problem$size             <- size
-   problem$walk            <- list(nombre = "",
-                                  tiempo = 0,
-                                  coste = 0 )
-   n <- read.csv(file, header = FALSE, sep = ";", skip = 3, nrows = 1)
-   
-   t <- as.numeric(str_split_fixed(n[1], ":", 2))
-   problem$walk <- list(nombre = "Walk",
-                        tiempo = t[2],
-                        coste = as.numeric(n[2]))
+
+
    n <- read.csv(file, header = FALSE, sep = ";", skip = 4, nrows = 1)
    
    t <- as.numeric(str_split_fixed(n[1], ":", 2))
    problem$exchange <- list(nombre = "Ex",
                             tiempo = t[2],
                             coste = as.numeric(n[2]))
+   n <- read.csv(file, header = FALSE, sep = ";", skip = 3, nrows = 1)
+   
+   t <- as.numeric(str_split_fixed(n[1], ":", 2))
+   problem$walk <- list(nombre = "Walk",
+                        tiempo = t[2],
+                        coste = as.numeric(n[2]))
+   
    n <- read.csv(file, header = FALSE, sep = "\n")
    num <- as.numeric(nrow(n))
    if(num > 5){
     i <- 5
     transportes <- c()
-    a <- 6
+    a <- 7
     for(i in 5:num){
       problem[[a]] <- obtener_datos_transporte(i)
       
@@ -93,14 +93,85 @@ obtener_datos_transporte <- function(skip) {
   #return(problem)
 #}
 
+
 # Analyzes if an action can be applied in the received state.
 is.applicable <- function (state, action, problem) {
+  p <- state$posicion
+  
+  i <- state&transporte+6
+  a <- problem[[i]]$posiciones
+  
+  
   if(action == "Walk" && !state$transporte == 0)
     return(TRUE)
-  if(action == "Metro" && !state$transporte == 1 && state$posicion %in% problem$transporte$posiciones)
+  if(action == "Metro" && !state$transporte == 1 && state$posicion %in% problem[[7]]$posiciones)
     return(TRUE)
-  if(action == "Bus" && !state$transporte == 2)
+  if(action == "Bus" && !state$transporte == 2 && state$posicion %in% problem[[8]]$posiciones)
     return(TRUE)
+  if(action == "Tren" && !state$transporte == 3 && state$posicion %in% problem[9]$posiciones)
+    return(TRUE)
+  if(action == "N" && state$posicion[2]<problem$size[2]+1){
+    if(state&transporte == 0)
+      return(TRUE)
+    p[2] <- p[2]+1
+    if(p %in% a)
+      return(TRUE)
+
+  }
+  if(action == "S" && state$posicion[2]>0){
+    if(state&transporte == 0)
+      return(TRUE)
+    p[2] <- p[2]-1
+    if(p %in% a)
+      return(TRUE)
+  }
+  if(action == "E" && state$posicion[1]<problem$size[1]+1){
+    if(state&transporte == 0)
+      return(TRUE)
+    p[1] <- p[1]+1
+    if(p %in% a)
+      return(TRUE)
+  }
+  if(action == "W" && state$posicion[1]>0){
+    if(state&transporte == 0)
+      return(TRUE)
+    p[1] <- p[1]-1
+    if(p %in% a)
+      return(TRUE)
+  }
+  if(action == "NE" && state$posicion[2]<problem$size[2]+1 && state$posicion[1]<problem$size[1]+1){
+    if(state&transporte == 0)
+      return(TRUE)
+    p[2] <- p[2]+1
+    p[1] <- p[1]+1
+    if(p %in% a)
+      return(TRUE)
+  }
+  if(action == "NW" && state$posicion[2]<problem$size[2]+1 && state$posicion[1]>0){
+    if(state&transporte == 0)
+      return(TRUE)
+    p[2] <- p[2]+1
+    p[1] <- p[1]-1
+    if(p %in% a)
+      return(TRUE)
+  }
+  if(action == "SE" && state$posicion[2]>0 && state$posicion[1]<problem$size[1]+1){
+    if(state&transporte == 0)
+      return(TRUE)
+    p[2] <- p[2]-1
+    p[1] <- p[1]+1
+    if(p %in% a)
+      return(TRUE)
+  }
+  if(action == "SW" && state$posicion[2]>0 && state$posicion[1]>0){
+    if(state&transporte == 0)
+      return(TRUE)
+    p[2] <- p[2]-1
+    p[1] <- p[1]-1
+    if(p %in% a)
+      return(TRUE)
+  }
+  
   
   
   
@@ -113,7 +184,78 @@ is.applicable <- function (state, action, problem) {
 
 # Returns the state resulting on applying the action over the state
 effect <- function (state, action, problem) {
-  result <- state # Default value is the current state.
+  result <- state 
+  i <- result&transporte+6
+  p <- result$posicion
+  
+  if(action == "Walk"){
+    result$transporte <- 0
+    result$tiempo <- result$tiempo + problem$exchange$tiempo
+  }
+  if(action == "Metro"){
+    result$transporte <- 1
+    result$tiempo <- result$tiempo + problem$exchange$tiempo
+    if(result&ticket[1] == 0)
+      result&ticket[1] <- 1
+  }
+  if(action == "Bus"){
+    result$transporte <- 2
+    result$tiempo <- result$tiempo + problem$exchange$tiempo
+    if(result&ticket[2] == 0)
+      result&ticket[2] <- 1
+  }
+  if(action == "Tren"){
+    result$transporte <- 3
+    result$tiempo <- result$tiempo + problem$exchange$tiempo
+    if(result&ticket[3] == 0)
+      result&ticket[3] <- 1
+  }
+  if(action == "N"){
+    p[2] <- p[2]+1
+    result$posicion <- p
+    result$tiempo <- result&tiempo + problem[[i]]$tiempo
+  }
+  if(action == "S"){
+    p[2] <- p[2]-1
+    result$posicion <- p
+    result$tiempo <- result&tiempo + problem[[i]]$tiempo
+  }
+  if(action == "E"){
+    p[1] <- p[1]+1
+    result$posicion <- p
+    result$tiempo <- result&tiempo + problem[[i]]$tiempo
+  }
+  if(action == "W"){
+    p[1] <- p[1]-1
+    result$posicion <- p
+    result$tiempo <- result&tiempo + problem[[i]]$tiempo
+  }
+  if(action == "NE"){
+    p[2] <- p[2]+1
+    p[1] <- p[1]+1
+    result$posicion <- p
+    result$tiempo <- result&tiempo + problem[[i]]$tiempo
+  }
+  if(action == "NW"){
+    p[2] <- p[2]+1
+    p[1] <- p[1]-1
+    result$posicion <- p
+    result$tiempo <- result&tiempo + problem[[i]]$tiempo
+  }
+  if(action == "SE"){
+    p[2] <- p[2]-1
+    p[1] <- p[1]+1
+    result$posicion <- p
+    result$tiempo <- result&tiempo + problem[[i]]$tiempo
+  }
+  if(action == "SW"){
+    p[2] <- p[2]-1
+    p[1] <- p[1]-1
+    result$posicion <- p
+    result$tiempo <- result&tiempo + problem[[i]]$tiempo
+  }
+  
+# Default value is the current state.
   
   # <INSERT YOUR CODE HERE TO MODIFY CURRENT STATE>
   
@@ -121,7 +263,7 @@ effect <- function (state, action, problem) {
 }
 
 # Analyzes if a state is final or not
-is.final.state <- function (state, final_satate, problem) {
+is.final.state <- function (state, final_state, problem) {
   if(state$posicion == problem$final)
     result <- TRUE
   else result <- FALSE # Default value is FALSE.
@@ -133,19 +275,24 @@ is.final.state <- function (state, final_satate, problem) {
 
 # Transforms a state into a string
 to.string = function (state, problem) {
-  # <INSERT YOUR CODE HERE TO GENERATE A STRING THAT REPRESENTS THE STATE> 
+  # <INSERT YOUR CODE HERE TO GENERATE A STRING THAT REPRESENTS THE STATE>
+  
 }
 
 # Returns the cost of applying an action over a state
 get.cost <- function (action, state, problem) {
+  result <- 0
+  for(i in state&ticket){
+    result <- result + state&ticket[1]*problem[[i+6]]$coste
+  }
   # <INSERT YOUR CODE HERE TO RETURN THE COST OF APPLYING THE ACTION ON THE STATE> 
   
-  return(1) # Default value is 1.
+  return(result) # Default value is 1.
 }
 
 # Heuristic function used by Informed Search Algorithms
 get.evaluation <- function(state, problem) {
   # <INSERT YOUR CODE HERE TO RETURN THE RESULT OF THE EVALUATION FUNCTION>
   
-	return(1) # Default value is 1.
+	return(state&tiempo) # Default value is 1.
 }
