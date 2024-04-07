@@ -22,7 +22,7 @@ source("../algorithms/informed/a-star-search.R")
 # Include functions for data analysis and result plot
 source("../algorithms/results-analysis/analyze-results.R")
 
-# Multimodal
+# Multimodal problem
 source("../problem/multimodal.R")
 
 solve.problem <- function(file) {
@@ -55,16 +55,17 @@ solve.problem <- function(file) {
   kable_material(kbl(results, caption = problem$name), c("striped", "hover", "condensed", "responsive"))  
 }
 
-file <- "../data/multimodal-planer/map0.txt";
+file <- "../data/multimodal-planner/map0.txt";
 solve.problem(file)
 
-file <- "../data/multimodal-planer/map1.txt"
+file <- "../data/multimodal-planner/map1.txt"
 solve.problem(file)
 
-file <- "../data/multimodal-planer/map2.txt"
+file <- "../data/multimodal-planner/map2.txt"
 solve.problem(file)
 
-file <- "../data/multimodal-planer/map3.txt"
+file <- "../data/multimodal-planner/map3.txt"
 solve.problem(file)
-file <- "../data/multimodal-planer/map4.txt"
-solve.problem(file)
+
+file <- "../data/multimodal-planner/map4.txt"
+solve.problem(file, 0.3)

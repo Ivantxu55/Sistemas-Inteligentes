@@ -4,13 +4,12 @@
 # search algorithms. If you modify any headers the algorithms may not work.
 # =========================================================================
 
-rm(list = ls()) # Clear Environment
+#rm(list = ls()) # Clear Environment
 cat("\014")     # Clear Console
 graphics.off()
 library(stringr)
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-file <- "../data/multimodal-planner/map4.txt"
 
 obtener_datos_transporte <- function(skip) {
   transporte <- list()
@@ -86,7 +85,7 @@ initialize.problem <- function(file) {
    
    }
   # You can add additional attributes
-    problem$posible_actions <- data.frame(dierction = c("N", "S", "E", "W", "NE", "NW", "SE", "SW",
+    problem$actions_possible <- data.frame(dierction = c("N", "S", "E", "W", "NE", "NW", "SE", "SW",
                                                         "Walk", "Metro", "Bus", "Tren"))
    
   
@@ -264,8 +263,9 @@ effect <- function (state, action, problem) {
 
 # Analyzes if a state is final or not
 is.final.state <- function (state, final_state, problem) {
-  if(state$posicion == problem$final)
+  if(state$posicion[1] == problem$final[1] && state$posicion[2] == problem$final[2]) {
     result <- TRUE
+  }
   else result <- FALSE # Default value is FALSE.
   
   # <INSERT YOUR CODE HERE TO CHECK WHETHER A STATE IS FINAL OR NOT> 
