@@ -68,4 +68,4 @@ file <- "../data/multimodal-planner/map3.txt"
 solve.problem(file)
 
 file <- "../data/multimodal-planner/map4.txt"
-solve.problem(file, 0.3)
+solve.problem(file)
