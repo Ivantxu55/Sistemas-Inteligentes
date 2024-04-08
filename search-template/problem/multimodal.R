@@ -99,6 +99,7 @@ is.applicable <- function (state, action, problem) {
     
   i <- state$transporte+6
   a <- problem[[i]]$posiciones
+  result <- FALSE
   
   
   if(action == "Walk" && !state$transporte == 0)
@@ -174,7 +175,7 @@ is.applicable <- function (state, action, problem) {
   
   
   
-  result <- FALSE # Default value is FALSE.
+   # Default value is FALSE.
   
   # <INSERT CODE HERE TO CHECK THE APPLICABILITY OF EACH ACTION>
   
@@ -276,6 +277,19 @@ is.final.state <- function (state, final_state, problem) {
 # Transforms a state into a string
 to.string = function (state, problem) {
   # <INSERT YOUR CODE HERE TO GENERATE A STRING THAT REPRESENTS THE STATE>
+    # Convertimos el tiempo a un formato legible
+    tiempo_formateado <- format(state$tiempo, digits = 2)
+    
+    # Creamos una cadena con la información del estado
+    descripcion_estado <- paste(
+      "Posición:", state$posicion,
+      ", Tiempo:", tiempo_formateado,
+      ", Tickets:", paste(state$ticket, collapse = ","),
+      ", Transporte:", state$transporte,
+      sep = ", "
+    )
+    
+    return(descripcion_estado)
   
 }
 
