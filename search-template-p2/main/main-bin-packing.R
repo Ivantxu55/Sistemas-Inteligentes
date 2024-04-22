@@ -13,7 +13,7 @@ library(rlist)
 # Include algorithm functions
 source("../algorithms/blind/expand-node.R")
 source("../algorithms/informed/hill-climbing-search.R")
-source("C:/Users/ivanc/OneDrive/Documentos/Sistemas-Inteligentes/search-template-p2/main/stochastic-hill-climbing.R")
+source("../algorithms/informed/stochastic-hill-climbing.R")
 
 # Include functions for data analysis and result plot
 source("../algorithms/results-analysis/analyze-results.R")
