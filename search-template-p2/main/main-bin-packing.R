@@ -14,6 +14,7 @@ library(rlist)
 source("../algorithms/blind/expand-node.R")
 source("../algorithms/informed/hill-climbing-search.R")
 source("../algorithms/informed/stochastic-hill-climbing.R")
+source("../algorithms/informed/random-restart-hill-climbing.R")
 
 # Include functions for data analysis and result plot
 source("../algorithms/results-analysis/analyze-results.R")
@@ -25,10 +26,16 @@ source("../problem/bin-packing.R")
 execute.hill.climbing <- function(filename) {
   # Initialize problem
   problem <- initialize.problem(filename)
-  return(stochastic.hill.climbing(problem = problem, max_iterations = 50, count_print = 10, trace = FALSE))
+  
+  #return(stochastic.hill.climbing(problem = problem, max_iterations = 50, count_print = 10, trace = FALSE))
          
   #return(hill.climbing.search(problem = problem, max_iterations = 50, count_print = 10, trace = FALSE))
+  
+  return(random.restart.hill.climbing(problem = problem, restarts = 5, max_iterations = 50, count_print = 10, trace = FALSE))
+  
+  
 }
+
 
 # Execute an algorithm several times and analyze results
 test.algorithm <- function(filename, algorithms, times) {
@@ -69,8 +76,9 @@ cat("\014")
 graphics.off()
 
 algorithms    <- vector(mode = "list")
-algorithms[2] <- "hill.climbing"
-algorithms[1] <- "stochastic.hill.climbing"
+algorithms[1] <- "hill.climbing"
+algorithms[2] <- "stochastic.hill.climbing"
+algorithms[3] <- "execute.random.hill.climbing"
 
 filenames     <- vector(mode = "list")
 filenames[1]  <- "../data/bin-packing/bin-packing-5.txt"
