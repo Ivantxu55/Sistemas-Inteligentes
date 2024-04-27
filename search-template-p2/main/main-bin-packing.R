@@ -16,6 +16,7 @@ source("../algorithms/informed/hill-climbing-search.R")
 source("../algorithms/informed/stochastic-hill-climbing.R")
 source("../algorithms/informed/random-restart-hill-climbing.R")
 source("../algorithms/informed/stochastic-random-restart.R")
+source("../algorithms/informed/local-beam-search.R")
 
 # Include functions for data analysis and result plot
 source("../algorithms/results-analysis/analyze-results.R")
@@ -28,7 +29,9 @@ execute.hill.climbing <- function(filename) {
   # Initialize problem
   problem <- initialize.problem(filename)
   
-  return(stochastic.hill.climbing(problem = problem, max_iterations = 50, count_print = 10, trace = FALSE))
+  return(local.beam.search(problem = problem, max_iterations = 50, count_print = 10, trace = FALSE, beams = 3))
+  
+  #return(stochastic.hill.climbing(problem = problem, max_iterations = 50, count_print = 10, trace = FALSE))
          
   #return(hill.climbing.search(problem = problem, max_iterations = 50, count_print = 10, trace = FALSE))
   
@@ -83,6 +86,7 @@ algorithms[1] <- "hill.climbing"
 algorithms[2] <- "stochastic.hill.climbing"
 algorithms[3] <- "random.hill.climbing"
 algorithms[4] <- "stochastic.random.restart"
+algorithms[5] <- "local.beam.search"
 
 filenames     <- vector(mode = "list")
 filenames[1]  <- "../data/bin-packing/bin-packing-5.txt"
@@ -94,6 +98,6 @@ filenames[4]  <- "../data/bin-packing/bin-packing-100.txt"
 # Number of times to execute each algorithm
 times       <- 10
 # Execute several times each algorithm for a specific problem
-test.algorithm(filenames[[3]], algorithms, times)
+test.algorithm(filenames[[1]], algorithms, times)
 
 
