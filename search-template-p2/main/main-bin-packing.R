@@ -29,8 +29,8 @@ execute.hill.climbing <- function(filename) {
   # Initialize problem
   problem <- initialize.problem(filename)
   
-  return(local.beam.search(problem = problem, max_iterations = 50, count_print = 10, trace = FALSE, beams = 3))
-  
+  return(local.beam.search(problem = problem, beams = 3, max_iterations = 50, count_print = 10, trace = FALSE))
+   
   #return(stochastic.hill.climbing(problem = problem, max_iterations = 50, count_print = 10, trace = FALSE))
          
   #return(hill.climbing.search(problem = problem, max_iterations = 50, count_print = 10, trace = FALSE))
