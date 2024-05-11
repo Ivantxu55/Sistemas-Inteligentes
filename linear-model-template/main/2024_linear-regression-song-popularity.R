@@ -31,7 +31,7 @@ source("linear-regression-utils.R")
 #-----------------------
 # READ AND PREPARE DATA
 #-----------------------
-data <- read.csv("../data/2023_song_data.csv")
+data <- read.csv("../data/modified_songs.csv")
 
 # Name is omitted because it is not a numerical value.
 data$song_name <- NULL
