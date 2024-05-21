@@ -45,8 +45,6 @@ stochastic.hill.climbing <- function(problem,
     
     # Create an array of better nodes
     better_nodes <- Filter(function(node) node$evaluation < node_current$evaluation, successor_nodes)
-    print(successor_nodes)
-    print(better_nodes)
     # Select best successor
     if (length(better_nodes) > 0) {
       node_best_successor <- sample(better_nodes, 1)[[1]]
